@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiorentino-TP</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body>
+    <header>
+        <nav class="w3-top w3-bar w3-black">
+            <a href="#home" class="w3-bar-item w3-button">37845 - Christian Fiorentino</a>
+            <!-- <a href="#about" class="w3-bar-item w3-button">About</a>
+            <a href="#members" class="w3-bar-item w3-button">Members</a>
+            <a href="#contact" class="w3-bar-item w3-button">Contact</a> -->
+        </nav>
+    </header>
+    <main>
+        <div class="w3-container w3-padding-64">
+            <!-- <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-teal w3-large">Crear Item</button>  OTRA FORMA DEL MISMO BOTON -->
+            <button id="btnCrearItem" class="w3-button w3-teal w3-large">Crear Item</button>
+            <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-teal w3-large w3-disabled">Leer Todo</button>
+            <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-teal w3-large w3-disabled">Filtrar</button>
+            <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-teal w3-large w3-disabled">Buscar</button>
+        </div>
+        <div class="w3-container">
+            <table class="w3-table w3-card-4 w3-striped w3-bordered">
+                <thead>
+                    <tr class="w3-blue-grey">
+                        <th>Id.</th>
+                        <th>Categoría</th>
+                        <th>Modelo</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+        </div>
+        <!-- MODAL Agregar ID -->
+        <div id="id01" class="w3-modal">
+            <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
+        
+                <div class="w3-container w3-center w3-teal"><br>
+                    <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-xlarge w3-hover-red w3-display-topright" title="Close Modal">&times;</span>
+                    <h3>Crear un nuevo artículo</h3>
+                    <!-- <img src="img_avatar4.png" alt="Avatar" style="width:30%" class="w3-circle w3-margin-top"> -->
+                </div>
+        
+                <form id="form" class="w3-container">
+                    <div class="w3-section">
+                        <label><b>Id.</b></label>
+                        <input class="w3-input w3-margin-bottom" type="text" placeholder="Ingrese Id." name="id" required id="id">
+                        <label><b>Categoría</b></label>
+                        <select class="w3-select  w3-margin-bottom" name="cat" id="cat">
+                            <option value="" disabled selected>Seleciona una Categoría:</option>
+                            <option value="anillos">Anillos</option>
+                            <option value="aros">Aros</option>
+                            <option value="dijes">Dijes</option>
+                        </select>
+                        <label><b>Modelo</b></label>
+                        <input class="w3-input  w3-margin-bottom" type="text" placeholder="Ingrese Modelo" name="mod" required id="mod">
+                        <label><b>Precio</b></label>
+                        <input class="w3-input  w3-margin-bottom" type="text" placeholder="Ingrese Precio de venta" name="precio" required id="precio">
+                        <label><b>Stock</b></label>
+                        <input class="w3-input  w3-margin-bottom" type="text" placeholder="Ingrese Stock del producto" name="stk" required id="stk">
+                        
+                    </div>
+                    <div class="w3-container w3-border-top w3-padding-16 w3-light-grey w3-right">
+                        <button onclick="document.getElementById('id01').style.display='none'" type="button" class="w3-button w3-red">Cancelar</button>
+                        <button id="btnAgregar" class="w3-button w3-green w3-section w3-padding" type="submit">Agregar Item</button>
+                        
+                    </div>
+                </form>
+        
+        
+            </div>
+        </div>
+
+    </main>
+    <div class="w3-panel w3-pale-green w3-bottombar w3-topbar w3-border-green w3-border">
+        <p>En esta entrega es funcional la opción de Crear nuevos Items.</p>
+        <p>Los datos provenientes de una lista, son modificados desde el codigo y mostrados segun el ultimo estado del array.</p>
+        <p>Luego se pueden agregar artículos desde el boton "Crear Item"</p>
+    </div>
+
+    <script src="./main.js"></script>
+</body>
+</html>
