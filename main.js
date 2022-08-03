@@ -14,44 +14,74 @@ class ALAB{
 	}
     
     #setData(){
-        /* this.#data = [] */
-        this.#data = [
-            { id: 1, cat: "anillos", mod: "royal", precio: 350, stk: 10 },
-            { id: 2, cat: "anillos", mod: "solitario", precio: 200, stk: 10 },
-            { id: 3, cat: "aros", mod: "nature", precio: 150, stk: 10 },
-            { id: 4, cat: "dijes", mod: "mariposa", precio: 50, stk: 10 },
-        ]
+        /* Si el repositorio en Localstorage esta vacio, carga por unica vez los datos del array */
+        
+        let repositorio = this.#recuperar(this.#nombreTabla)
+        if (repositorio == null){
+            this.#data = [
+                { id: 1, cat: "anillos", mod: "royal", precio: 350, stk: 10 },
+                { id: 2, cat: "anillos", mod: "solitario", precio: 200, stk: 10 },
+                { id: 3, cat: "aros", mod: "nature", precio: 150, stk: 10 },
+                { id: 4, cat: "dijes", mod: "mariposa", precio: 50, stk: 10 },
+            ]
+        } else {
+            this.#data = repositorio
+        }
     }
 
     #nombreTablaValidar(nombreTabla){
 		if(nombreTabla == undefined) throw new Error("Nombre de tabla requerida!");
     }
 
-    /* #guardar(){
+    #guardar(){
         let datosAGuardar = JSON.stringify(this.#data)
-    } ---Analizar donde y como grabar (qué persistencia usar)*/
+        localStorage.setItem(this.#nombreTabla, datosAGuardar)
+    }
+
+    #recuperar(key){
+        let data = localStorage.getItem(key)
+        return JSON.parse(data)
+    }
+
+    #existeId(id){
+        return this.#data[id] === undefined ? false : true
+    }
+
+    #existeRegistro(id) {
+        if (!this.#existeId(id)) throw new Error("El registro no existe")
+    }
 
     alta(data){
         this.#data.push(data)
+        this.#guardar()
         return this.#data.length
     }
 
     leer(id){
+        this.#existeRegistro(id)
         return this.#data[id]
     }
 
     actualizar(id, data){
+        this.#existeRegistro(id)
         this.#data[id] = data
+        this.#guardar()
         return true
     }
 
     borrar(id){
+        this.#existeRegistro(id)
         this.#data.splice(id, 1)
+        this.#guardar()
         return true
     }
 
     leerTodo(){
         return this.#data
+    }
+
+    asignarId(){
+        return this.#data.length + 1
     }
 
     buscarCat(str){
@@ -99,7 +129,7 @@ function app() {
         e.preventDefault()
         if (opcion == 'crear'){
             console.log('crear')
-            sistema.alta({id: id.value, cat: cat.value, mod: mod.value, precio: precio.value, stk: stk.value})
+            sistema.alta({id: sistema.asignarId(), cat: cat.value, mod: mod.value, precio: precio.value, stk: stk.value})
             mostrar(sistema.leerTodo())
         }
         if (opcion == 'editar'){
@@ -110,16 +140,35 @@ function app() {
     
     btnCrearItem.addEventListener('click', ()=>{
         document.getElementById('form').reset()
-                document.getElementById('id01').style.display='block'
+        document.getElementById('id01').style.display='block'
         opcion = 'crear'
+    })
+
+    btnLeerTodo.addEventListener('click', (e)=>{
+        mostrar(sistema.leerTodo())
+    })
+
+    btnFiltro.addEventListener('click', (e)=>{
+        document.getElementById('id02').style.display='block'
+    })
+
+    btnFiltrar.addEventListener('click', (e)=>{
+        e.preventDefault()
+        let fil = document.getElementById('cat').value
+        console.log(fil)
+        dataFiltrada = sistema.filtrar(fil)
+        console.log(dataFiltrada)
+        mostrar(dataFiltrada)
+        document.getElementById('id02').style.display='none'
     })
 
     //Se crea tabla mediante la funcion/metodo constructor
     let sistema = new ALAB("dbcontainer")
 
-    // Agrega un objeto al Array
+    /* // Agrega un objeto al Array
     sistema.alta({id: 5, cat: "dijes", mod: "flor", precio: 50})
-
+    console.log(sistema.asignarId())
+ */
     //La siguiente funciona como Funcion de orden superior(funcion que recibe una funcion)
     console.log(sistema.leerTodo())
     mostrar(sistema.leerTodo())
