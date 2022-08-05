@@ -44,10 +44,13 @@ class ALAB{
     }
 
     #existeId(id){
-        return this.#data[id] === undefined ? false : true
+        let idi = parseInt(id) - 1
+        console.log(idi)
+        return this.#data[idi] === undefined ? false : true
     }
 
     #existeRegistro(id) {
+        console.log("h"+this.#existeId(id))
         if (!this.#existeId(id)) throw new Error("El registro no existe")
     }
 
@@ -59,19 +62,19 @@ class ALAB{
 
     leer(id){
         this.#existeRegistro(id)
-        return this.#data[id]
+        return this.#data[id-1]
     }
 
     actualizar(id, data){
         this.#existeRegistro(id)
-        this.#data[id] = data
+        this.#data[id-1] = data
         this.#guardar()
         return true
     }
 
     borrar(id){
         this.#existeRegistro(id)
-        this.#data.splice(id, 1)
+        this.#data.splice(id-1, 1)
         this.#guardar()
         return true
     }
@@ -106,6 +109,7 @@ function app() {
     const stk = document.getElementById('stk')
     let resultados = ''
     let opcion = ''
+    let idx = 0
     
     const mostrar = (articulos) => {
         resultados = ''
@@ -117,15 +121,15 @@ function app() {
                                 <td>${articulo.precio}</td>
                                 <td>${articulo.stk}</td>
                                 <td>
-                                    <button class="w3-button w3-white w3-border w3-tiny w3-border-green w3-round-large w3-text-green w3-hover-green">Modificar</button>
-                                    <button class="w3-button w3-white w3-border w3-tiny w3-border-red w3-round-large w3-text-red w3-hover-red">Borrar</button>
+                                    <button class="btnEditar w3-button w3-white w3-border w3-tiny w3-border-green w3-round-large w3-text-green w3-hover-green">Modificar</button>
+                                    <button class="btnBorrar w3-button w3-white w3-border w3-tiny w3-border-red w3-round-large w3-text-red w3-hover-red">Borrar</button>
                                 </td>
                             </tr>`
         });
         contenedor.innerHTML = resultados
     }
     
-    btnAgregar.addEventListener('click', (e)=>{
+    btnGuardar.addEventListener('click', (e)=>{
         e.preventDefault()
         if (opcion == 'crear'){
             console.log('crear')
@@ -134,6 +138,10 @@ function app() {
         }
         if (opcion == 'editar'){
             console.log('editar')
+            console.log(idx)
+            console.log(`${idx} ${cat.value} - ${mod.value} - ${precio.value} - ${stk.value} -`)
+            data = `{ id: ${idx}, cat: ${cat.value}, mod: ${mod.value}, precio: ${precio.value}, stk: ${stk.value} }`
+            sistema.actualizar(idx, data)
         }
         document.getElementById('id01').style.display='none'
     })
@@ -154,12 +162,58 @@ function app() {
 
     btnFiltrar.addEventListener('click', (e)=>{
         e.preventDefault()
-        let fil = document.getElementById('cat').value
-        console.log(fil)
-        dataFiltrada = sistema.filtrar(fil)
+        dataFiltrada = sistema.filtrar(cate.value)
         console.log(dataFiltrada)
         mostrar(dataFiltrada)
         document.getElementById('id02').style.display='none'
+    })
+
+    const on = (Element, Event, selector, handler) => {
+        /* console.log(Element)
+        console.log(Event)
+        console.log(selector)
+        console.log(handler) */
+        Element.addEventListener(Event, e =>{
+            if(e.target.closest(selector)){
+                handler(e)
+            }
+        })
+    }
+
+    //Procedimiento para BORRAR
+    on(document, 'click', '.btnBorrar', e => {
+        const fila = e.target.parentNode.parentNode
+        idx = fila.firstElementChild.innerHTML
+        console.log(idx)
+        document.getElementById('id03').style.display='block'
+        return idx
+    })
+
+    btnOkBorrar.addEventListener('click', (e)=>{
+        console.log("antes de borrar id "+idx)
+        sistema.borrar(idx)
+        mostrar(sistema.leerTodo())
+        document.getElementById('id03').style.display='none'
+    })
+
+    //Procedimiento para EDITAR
+    let idForm =0
+    on(document, 'click', '.btnEditar', e => {
+        const fila = e.target.parentNode.parentNode
+        idForm = fila.children[0].innerHTML
+        const catForm = fila.children[1].innerHTML
+        const modForm = fila.children[2].innerHTML
+        const precioForm = fila.children[3].innerHTML
+        const stkForm = fila.children[4].innerHTML
+        /* console.log(`ID: ${idForm} - CATEGORIA: ${catForm} MODELO: ${modForm} PRECIO: ${precioForm} STOCK: ${stkForm}`) */
+        idx = idForm
+        cat.value = catForm
+        mod.value = modForm
+        precio.value = precioForm
+        stk.value = stkForm
+        opcion = 'editar'
+        console.log(`${idx} - ${cat.value} - ${mod.value} - ${precio.value} - ${stk.value} -`)
+        document.getElementById('id01').style.display='block'
     })
 
     //Se crea tabla mediante la funcion/metodo constructor
